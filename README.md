@@ -814,7 +814,8 @@ for high level derivation operations.
 * Updated composer.json - use lastguest/murmurhash 'dev-master#0150ba2 as 2.0.0' until bitwasp updates to ^2.1(?) on composer.json
 * Updated a lot of other files to fix the @$... vars that break on PHP 8.x
 
-Also 2 fixes in vendor/dan-da/texttable-php/texttable.class.php : 
+Also 2 fixes in vendor/dan-da/texttable-php/texttable.class.php :
+
     static protected function print_row( $col_widths, $row ) {
         $buf = '|';
         $idx = 0;
