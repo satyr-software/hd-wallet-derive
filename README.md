@@ -47,6 +47,7 @@
   * [install secp256kp1 php extension for big speedup](#install-secp256kp1-php-extension-for-big-speedup)
 - [Thanks](#thanks)
 - [Todos](#todos)
+- [Changelog](#changelog)
 
 
 # hd-wallet-derive
@@ -807,3 +808,33 @@ heavy lifting of dealing with deterministic keys and all things bitcoin.
 for high level derivation operations.
 * add test cases, ideally for each coin.
 * web frontend, maybe just for xpub keys, or to run locally.
+
+# Changelog
+2021-05-04 satyr-software : Fix so that it would run on PHP 8.x.
+* Updated composer.json - use lastguest/murmurhash 'dev-master#0150ba2 as 2.0.0' until bitwasp updates to ^2.1(?) on composer.json
+* Updated a lot of other files to fix the @$... vars that break on PHP 8.x
+
+Also 2 fixes in vendor/dan-da/texttable-php/texttable.class.php : 
+    static protected function print_row( $col_widths, $row ) {
+        $buf = '|';
+        $idx = 0;
+        foreach( $row as $val ) {
+            $pad_type = is_numeric( $val ) ? STR_PAD_LEFT : STR_PAD_RIGHT;
+            $buf .= ' ' . str_pad( $val, (isset($col_widths[$idx])? $col_widths[$idx] : 0 ), ' ', $pad_type ) . " |";
+            $idx ++;
+        }
+        return $buf . "\n";
+    }
+
+    static protected function calc_row_col_widths( &$col_widths, $row ) {
+        $idx = 0;
+        foreach( $row as $val ) {
+            $len = strlen( $val );
+            if (!isset($col_widths[$idx])) { $col_widths[$idx]=0; }
+            if( $len > $col_widths[$idx] ) {
+                $col_widths[$idx] = $len;
+            }
+            $idx ++;
+        }
+    }
+

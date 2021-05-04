@@ -62,9 +62,9 @@ class Util
         }
 
         // format and cols must be set prior to calling ::printHelpCoins()
-        $params['cols'] = @$params['cols'] ?: 'all';
+        $params['cols'] = (isset($params['cols']) ? $params['cols'] : 'all');
         $params['cols'] = static::getCols( $params );
-        $params['format'] = @$params['format'] ?: 'txt';
+        $params['format'] = (isset($params['format']) ? $params['format'] : 'txt');
         
         if(isset($params['help-coins'])) {
             static::printHelpCoins( $params );
@@ -82,50 +82,50 @@ class Util
         }
         
         // default to btc for backwards compat.
-        $params['coin'] = @$params['coin'] ?: 'btc';
+        $params['coin'] = (isset($params['coin']) ? $params['coin']: 'btc');
         
         // TODO
-        if(@$params['logfile']) {
+        if(isset($params['logfile'])) {
             mylogger()->set_log_file( $params['logfile'] );
             mylogger()->echo_log = false;
         }
 
-        $loglevel = @$params['loglevel'] ?: 'specialinfo';
+        $loglevel = (isset($params['loglevel']) ? $params['loglevel']: 'specialinfo');
         MyLogger::getInstance()->set_log_level_by_name( $loglevel );
 
         $params['gen-key'] = isset($params['gen-key']) || isset($params['gen-words']);
         $params['gen-key-all'] = isset($params['gen-key-all']);  // hidden param, for the truly worthy who read the code.
-        $key = @$params['key'];
-        $mnemonic = @$params['mnemonic'];
+        $key = (isset($params['key'])? $params['key'] : null );	// No fallback in code. using null
+        $mnemonic = (isset($params['mnemonic']) ? $params['mnemonic'] : null);	// No fallback on this either. using null
 
         if( !$key && !$mnemonic && !$params['gen-key']) {
             throw new Exception( "--key or --mnemonic or --gen-key must be specified." );
         }
-        $params['mnemonic-pw'] = @$params['mnemonic-pw'] ?: null;
+        $params['mnemonic-pw'] = (isset($params['mnemonic-pw']) ? $params['mnemonic-pw'] : null);
         
-        $params['addr-type'] = @$params['addr-type'] ?: 'auto';
+        $params['addr-type'] = (isset($params['addr-type']) ? $parasm['addr-type'] : 'auto');
         $allowed_addr_type = ['legacy', 'p2sh-segwit', 'bech32', 'auto'];
         if(!in_array($params['addr-type'], $allowed_addr_type)) {
             throw new Exception(sprintf("--addr-type must be one of: [%s]", implode('|', $allowed_addr_type)));
         }
         
-        $keytype = @$params['key-type'] ?: 'x';
+        $keytype = (isset($params['key-type']) ? $params['key-type'] : 'x');
         $keytypes = ['x', 'y', 'z'];  // , 'Y', 'Z'];
         if(!in_array($keytype, $keytypes ) ) {
             throw new Exception( "--key-type must be one of: " . implode(',', $keytypes ));
         }
         $params['key-type'] = $keytype;
         
-        if( @$params['path'] && @$params['preset']) {
+        if( isset($params['path']) && isset($params['preset'])) {
             throw new Exception ("--path and --preset are mutually exclusive");
         }
         
-        if( @$params['preset']) {
+        if( isset($params['preset'])) {
             $preset = PathPresets::getPreset($params['preset']);
             $params['path'] = $preset->getPath();
         }
         
-        if( @$params['path'] ) {
+        if( isset($params['path']) ) {
             if(!preg_match('/[m\d]/', $params['path'][0]) ) {
                 throw new Exception( "path parameter is invalid.  It should begin with m or an integer number.");
             }
@@ -154,15 +154,15 @@ class Util
             $params['path'] = 'm';
         }
 
-        $params['bch-format'] = @$params['bch-format'] ?: 'cash';
-        $params['numderive'] = isset($params['numderive']) ? $params['numderive'] : 10;
-        $params['alt-extended'] = @$params['alt-extended'] ?: null;
-        $params['startindex'] = @$params['startindex'] ?: 0;
+        $params['bch-format'] = (isset($params['bch-format']) ? $params['bch-format'] : 'cash');
+        $params['numderive'] = (isset($params['numderive']) ? $params['numderive'] : 10);
+        $params['alt-extended'] = (isset($params['alt-extended']) ? $params['alt-extended'] : null);
+        $params['startindex'] = (isset($params['startindex']) ? $params['startindex'] : 0);
         $params['includeroot'] = isset($params['includeroot'] );
-        $params['path-change'] = isset($params['path-change']) ? 1 : 0;
-        $params['path-account'] = @$params['path-account'] ?: 0;
+        $params['path-change'] = (isset($params['path-change']) ? 1 : 0);
+        $params['path-account'] = (isset($params['path-account']) ? $params['path-account'] : 0);
         
-        $gen_words = (int)(@$params['gen-words'] ?: 24);
+        $gen_words = (int)(isset($params['gen-words']) ? $params['gen-words'] : 24);
         $allowed = self::allowed_numwords();
         if(!in_array($gen_words, $allowed)) {
             throw new Exception("--gen-words must be one of " . implode(', ', $allowed));
@@ -339,7 +339,7 @@ END;
      */
     public static function getCols( $params )
     {
-        $arg = static::stripWhitespace( @$params['cols'] ?: null );
+        $arg = static::stripWhitespace( (isset($params['cols']) ? $params['cols']: null ) );
 
         $allcols = [];
         if( isset($params['gen-key'])) {

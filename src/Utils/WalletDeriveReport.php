@@ -22,7 +22,7 @@ class WalletDeriveReport
     static public function printResults($params, $results, $fixedCols=false)
     {
         $format = $params['format'];
-        $outfile = @$params['outfile'];
+        $outfile = (isset($params['outfile']) ? $params['outfile'] : null);	// no default. presumed null will fail the if below
 
         $summary = [];  // placeholder
 

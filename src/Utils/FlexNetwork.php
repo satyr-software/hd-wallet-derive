@@ -27,7 +27,7 @@ class FlexNetwork extends Network {
         // Prefer scripthash2 to scripthash. For coins like LTC that
         // changed p2sh prefix after-launch to differentiate from BTC.
         // could be made configurable.
-        $scripthash = @$prefixes['scripthash2'] ?
+        $scripthash = isset($prefixes['scripthash2']) ?
                         $prefixes['scripthash2'] : $prefixes['scripthash'];
                         
         $this->base58PrefixMap = [

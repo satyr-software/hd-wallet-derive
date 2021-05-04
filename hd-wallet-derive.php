@@ -51,7 +51,7 @@ function main()
         }
 
         // Key derived from mnemonic if mnemonic is choosen
-        if( !@$params['key'] && @$params['mnemonic'] && !@$orig_params['path'] && !@$orig_params['preset']) {
+        if( !isset($params['key']) && isset($params['mnemonic']) && !isset($orig_params['path']) && !isset($orig_params['preset'])) {
             $path = $walletDerive->getCoinBip44ExtKeyPathPurposeByKeyType($params['coin'], $params['key-type']);
             if($path) {
                 $params['path'] = $path;
@@ -61,7 +61,7 @@ function main()
                 throw new Exception(sprintf("Bip32 extended key path unknown because no Bip44 ID found for %s.  You can override by setting --path explicitly.", $params['coin']));
             }
         }
-        $key = @$params['key'] ?: $walletDerive->mnemonicToKey($params['coin'], $params['mnemonic'], $params['key-type'], $params['mnemonic-pw']);
+        $key = (isset($params['key']) ? $params['key'] : $walletDerive->mnemonicToKey($params['coin'], $params['mnemonic'], $params['key-type'], $params['mnemonic-pw']) );
         $addrs = $walletDerive->derive_keys($key);
 
         // Prints result

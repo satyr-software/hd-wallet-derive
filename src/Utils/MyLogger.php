@@ -180,7 +180,7 @@ class MyLogger {
         $time_buf = '';        
         if( $last_log ) {
             $time = microtime(true);
-            $duration = @$this->_last_time ? $time - $this->_last_time : null;
+            $duration = (isset($this->_last_time) ? $time - $this->_last_time : null);
             $this->_last_time = $time;
             $time_buf = $duration ? sprintf( " [lastlog: %f secs] ", $duration) : '';
         }
