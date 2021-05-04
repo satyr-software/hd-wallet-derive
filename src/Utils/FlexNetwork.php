@@ -72,6 +72,7 @@ class FlexNetwork extends Network {
     }
     
     static private function dh($dec, $prepend_zero = false) {
+	if (!is_int($dec)) { return; } // DEBUG: echo "Non integer parameter : ".print_r($dec,1); return; 
         $hex = dechex($dec);
         $pre = strlen($hex) % 2 == 0 ? '' : '0';
         return $pre . $hex;

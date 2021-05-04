@@ -127,8 +127,8 @@ class WalletDerive
                 throw new Exception("'c' is present in path but Bip44 coin type is undefined for $coin");
             }
         }
-        $path_mask = str_replace('v', @$params['path-change'], $path_mask);
-        $path_mask = str_replace('a', @$params['path-account'], $path_mask);
+        $path_mask = str_replace('v', (isset($params['path-change'])? $params['path-change'] : ''), $path_mask);	// no default. used ''
+        $path_mask = str_replace('a', (isset($params['path-account'])? $params['path-account'] : '') , $path_mask);	// no default. used ''
 
         $count = 0;
         $period_start = time();
@@ -214,10 +214,10 @@ class WalletDerive
 
         $ext = $this->getExtendedPrefixes($coin);
         foreach($ext as $kt => $info) {
-            if( $key_prefix  == strtolower(@$info['public']) ) {
+            if( $key_prefix  == strtolower((isset($info['public'])? $info['public'] : '' )) ) {	// no default. using ''
                 return $kt[0];
             }
-            if( $key_prefix == strtolower(@$info['private']) ) {
+            if( $key_prefix == strtolower((isset($info['private'])? $info['private'] : '')) ) {	// no default. using ''
                 return $kt[0];
             }
         }
@@ -264,8 +264,8 @@ class WalletDerive
     private function getExtendedPrefixes($coin) {
         $params = $this->get_params();
         $nparams = $this->getNetworkParams($coin);
-        if( @$params['alt-extended'] ) {
-            $ext = @$params['alt-extended'];
+        if( isset($params['alt-extended']) ) {
+            $ext = $params['alt-extended'];
             $val = @$nparams['prefixes']['extended']['alternates'][$ext];
             if(!$val) {
                 throw new \Exception("Invalid value for --alt-extended.  Check coin type");
@@ -278,7 +278,7 @@ class WalletDerive
         $val = $val ?: [];
         // ensure no entries with empty values.
         foreach($val as $k => $v) {
-            if(!@$v['public'] || !@$v['private']) {
+            if(!isset($v['public']) || !isset($v['private'])) {
                 unset($val[$k]);
             }
         }

@@ -39,11 +39,11 @@ class MultiCoinRegistry extends PrefixRegistry
         $em = $extended_map;
         $map = [];
         $t = [];
-        $x = @$em['xpub'];
-        $y = @$em['ypub'];
-        $Y = @$em['Ypub'];
-        $z = @$em['zpub'];
-        $Z = @$em['Zpub'];
+        $x = (isset($em['xpub']) ? $em['xpub'] : null);
+        $y = (isset($em['ypub']) ? $em['ypub'] : null);
+        $Y = (isset($em['Ypub']) ? $em['Ypub'] : null);
+        $z = (isset($em['zpub']) ? $em['zpub'] : null);
+        $Z = (isset($em['Zpub']) ? $em['Zpub'] : null);
         
         $st = [
             'x'  => [ScriptType::P2PKH],
@@ -87,10 +87,10 @@ class MultiCoinRegistry extends PrefixRegistry
     }
     
     private function v($kt) {
-        return @$kt['private'] && $kt['public']; 
+        return (isset($kt['private'])? $kt['private'] : null) && (isset($kt['public'])? $kt['public'] : null);
     }
     
     public function prefixBytesByKeyType($key_type) {
-        return @$this->key_type_map[$key_type];
+        return (isset($this->key_type_map[$key_type]) ? $this->key_type_map[$key_type] : null);
     }
 }
